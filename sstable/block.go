@@ -6,6 +6,7 @@ package sstable
 
 import (
 	"encoding/binary"
+	"fmt"
 	"unsafe"
 
 	"github.com/cockroachdb/errors"
@@ -707,6 +708,7 @@ func (i *blockIter) SeekGE(key []byte, flags base.SeekGEFlags) (*InternalKey, ba
 		for index < upper {
 			h := int32(uint(index+upper) >> 1) // avoid overflow when computing h
 			// index ≤ h < upper
+			fmt.Printf("h: %d, index: %d, upper:%d, restarts: %d, len(i.data): %d", h, index, upper, i.restarts, len(i.data))
 			offset := decodeRestart(i.data[i.restarts+4*h:])
 			// For a restart point, there are 0 bytes shared with the previous key.
 			// The varint encoding of 0 occupies 1 byte.
